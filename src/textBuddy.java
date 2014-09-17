@@ -27,6 +27,7 @@ public class textBuddy {
 	private static Scanner scanner = new Scanner(System.in);
 	private static BufferedReader file;
 	private static ArrayList<String> fileContent;
+	public static ArrayList<String> testFileContent; //public accessible tasklist, used for testing
 	private static String fileName;
 	private static boolean exitMarker = false;
 	
@@ -192,7 +193,7 @@ public class textBuddy {
 	}
 	
 /*---------------------------Helper Functions----------------------------*/
-		
+	
 	private static void showToUser(String text) {
 		System.out.println(text);
 	}
@@ -230,5 +231,15 @@ public class textBuddy {
 		catch(IndexOutOfBoundsException e){
 			return EMPTY_STRING;
 		}
+	}
+
+/*---------------------Testing functions----------------------*/
+	
+	public static void copyIntoFileContent(){
+		fileContent = testFileContent;
+	}
+	
+	public static void copyFromFileContent(){
+		testFileContent = fileContent;
 	}
 }
