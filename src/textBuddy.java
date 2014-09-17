@@ -30,16 +30,18 @@ public class textBuddy {
 	private static String fileName;
 	private static boolean exitMarker = false;
 	
-	//Constructor
+	//Constructor which runs the main function with the fileName provided
 	public textBuddy(String fileN){
 		try{
-			fileName = fileN;
 			loadFile();
+			String[] arguments = {fileN};
+			main(arguments);
 		} 
 		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
+	
 	//Main function
 	public static void main(String args[]){
 		try {
