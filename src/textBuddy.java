@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.Scanner;
+import java.util.Collections;
 import java.util.ArrayList;
 	
 public class textBuddy {
@@ -12,6 +13,10 @@ public class textBuddy {
 	private static final String MESSAGE_ADD_ENTRY = "\"%s\" has been added to %s.";
 	private static final String MESSAGE_DELETE_ENTRY = "\"%s\" has been deleted from %s.";
 	private static final String MESSAGE_CLEAR = "All content has been deleted from %s.";
+	private static final String MESSAGE_SORT = "The text in %s has been sorted alphabetically.";
+	private static final String MESSAGE_SORT_NO_TEXT = "There is no text in %s to sort!";
+	private static final String MESSAGE_SEARCH_COMPLETE = "The word \"%s\" has been found in these lines\n%s";
+	private static final String MESSAGE_SEARCH_FAILED = "The word \"%s\" cannot be found in %s.";
 	private static final String MESSAGE_EXIT = "Thank you for using TextBuddy :)";
 	
 	//Display errors
@@ -27,28 +32,20 @@ public class textBuddy {
 	private static Scanner scanner = new Scanner(System.in);
 	private static BufferedReader file;
 	private static ArrayList<String> fileContent;
-	public static ArrayList<String> testFileContent; //public accessible tasklist, used for testing
+	public static ArrayList<String> testFileContent; //publicly accessible fileContent for testing only
 	private static String fileName;
 	private static boolean exitMarker = false;
 	
 	//Constructor which runs the main function with the fileName provided
 	public textBuddy(String fileN){
-		try{
-			loadFile();
-			String[] arguments = {fileN};
-			main(arguments);
-		} 
-		catch(Exception e){
-			e.printStackTrace();
-		}
+		main(new String[]{fileN});
 	}
 	
 	//Main function
 	public static void main(String args[]){
 		try {
-			//fileName = args[0];
-			//loadFile();
-			new textBuddy(args[0]);
+			fileName = args[0];
+			loadFile();
 			showToUser(String.format(MESSAGE_WELCOME, fileName));
 			
 			while(exitMarker == false){
@@ -80,6 +77,11 @@ public class textBuddy {
 				return clear();
 			case "display":
 				return display();
+			case "sort":
+				return sort();
+			case "search":
+				String toSearch = getParam(userCommand);
+				return search(toSearch);
 			case "exit":
 				return exit();
 			default: 
@@ -129,6 +131,35 @@ public class textBuddy {
 		} 
 		else {
 			return allText.trim();
+		}
+	}
+	
+	public static String sort(){
+		if(fileContent.size() == 0){
+			return String.format(MESSAGE_SORT_NO_TEXT, fileName);
+		} else {
+			Collections.sort(fileContent);
+			writeToFile();
+			return String.format(MESSAGE_SORT, fileName);
+		}
+	}
+	
+	public static String search(String toSearch){
+		int lineIndex = NOT_VALID_NUMBER;
+		String allLines = "";
+		for(int i = 0; i<fileContent.size(); i++){
+			String line = fileContent.get(i);
+			if(line.contains(toSearch)){
+				lineIndex = i+1;
+				String lineFound = lineIndex + ". " + line;
+				allLines = allLines + lineFound + "\n";
+			}
+		}
+		if(lineIndex == NOT_VALID_NUMBER){
+			return String.format(MESSAGE_SEARCH_FAILED, toSearch, fileName);
+		}
+		else {
+			return String.format(MESSAGE_SEARCH_COMPLETE, toSearch, allLines.trim());
 		}
 	}
 	
@@ -188,7 +219,7 @@ public class textBuddy {
 			bw.close();
 		} 
 		catch (Exception e){
-			e.printStackTrace();
+			;
 		}
 	}
 	
@@ -234,12 +265,14 @@ public class textBuddy {
 	}
 
 /*---------------------Testing functions----------------------*/
-	
-	public static void copyIntoFileContent(){
-		fileContent = testFileContent;
+	public static void initialiseTest(String fileN, ArrayList<String> data){
+		fileName = fileN;
+		fileContent = data;
 	}
 	
 	public static void copyFromFileContent(){
 		testFileContent = fileContent;
 	}
+	
+	
 }
