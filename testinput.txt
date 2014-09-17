@@ -1,0 +1,19 @@
+asdfghj
+add fox
+display
+add cow
+display
+add baby
+display
+delete 1
+delete 2
+add another cow
+display
+clear
+add
+
+add 54678
+delete 2
+delete r
+clear
+exit
