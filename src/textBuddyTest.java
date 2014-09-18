@@ -5,8 +5,10 @@ import org.junit.Test;
 
 
 public class textBuddyTest {
+	
 	private final String EMPTY_STRING = "";
 	
+	//to clean up the text file after testing
 	private void resetFile(String fileName){
 		try{
 			BufferedWriter bw = new BufferedWriter(new FileWriter(fileName));
@@ -20,25 +22,30 @@ public class textBuddyTest {
 	
 	@Test
 	public void testSort() {
+		
+		//sort, sorts the data in textBudd, then another function writes from
+		//the data to the text file each time a command is called, so testing the change
+		//in the data should be fine
 		ArrayList<String> testArray = new ArrayList<String>();
 		textBuddy.initialiseTest("myText.txt", testArray);
-		String outputFAILsort = textBuddy.sort();
 		
 		//test output from sort function if no text
+		String outputFAILsort = textBuddy.sort();
 		assertEquals(outputFAILsort, "There is no text in myText.txt to sort!");
 		
+		//Adding elements to the data
 		testArray.add("fox");
 		testArray.add("cow");
 		testArray.add("200 fishes");
 		testArray.add("the hulk");
 		testArray.add("foxy mama");
 		textBuddy.initialiseTest("myText.txt", testArray);
-		String outputSORTED = textBuddy.sort();
 		
 		//test output from sort function when completed
+		String outputSORTED = textBuddy.sort();
 		assertEquals(outputSORTED, "The text in myText.txt has been sorted alphabetically.");
 		
-		//tests whether the content has been sorted
+		//tests whether the content in the data has been sorted
 		textBuddy.copyFromFileContent();
 		assertEquals("200 fishes", textBuddy.testFileContent.get(0));
 		assertEquals("cow", textBuddy.testFileContent.get(1));
@@ -49,8 +56,11 @@ public class textBuddyTest {
 		resetFile("myText.txt");
 	}
 	
+	
 	@Test
 	public void testSearch() {
+		
+		//initialise the data with the following elements
 		ArrayList<String> testArray = new ArrayList<String>();
 		testArray.add("fox");
 		testArray.add("cow");
@@ -75,5 +85,5 @@ public class textBuddyTest {
 		
 		resetFile("myText.txt");
 	}
-
+	
 }
