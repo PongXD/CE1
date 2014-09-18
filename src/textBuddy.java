@@ -145,21 +145,12 @@ public class textBuddy {
 	}
 	
 	public static String search(String toSearch){
-		int lineIndex = NOT_VALID_NUMBER;
-		String allLines = "";
-		for(int i = 0; i<fileContent.size(); i++){
-			String line = fileContent.get(i);
-			if(line.contains(toSearch)){
-				lineIndex = i+1;
-				String lineFound = lineIndex + ". " + line;
-				allLines = allLines + lineFound + "\n";
-			}
-		}
-		if(lineIndex == NOT_VALID_NUMBER){
+		String allLinesFound = searchInList(toSearch);
+		if(allLinesFound.equals(EMPTY_STRING)){
 			return String.format(MESSAGE_SEARCH_FAILED, toSearch, fileName);
 		}
 		else {
-			return String.format(MESSAGE_SEARCH_COMPLETE, toSearch, allLines.trim());
+			return String.format(MESSAGE_SEARCH_COMPLETE, toSearch, allLinesFound.trim());
 		}
 	}
 	
@@ -198,10 +189,12 @@ public class textBuddy {
 	
 	private static void loadFromFileToList() throws Exception{
 		String allText = readFile();
-		String[] lines = allText.split("\n");
-		for(int i = 0; i < lines.length; i++){
-			String line = removeFirstWord(lines[i]);
-			fileContent.add(line);
+		if(!allText.equals(EMPTY_STRING)){
+			String[] lines = allText.split("\n");
+			for(int i = 0; i < lines.length; i++){
+				String line = removeFirstWord(lines[i]);
+				fileContent.add(line);
+			}
 		}
 		reloadFile();
 	}
@@ -209,7 +202,6 @@ public class textBuddy {
 	private static void writeToFile(){
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(fileName));
-			bw.write(EMPTY_STRING);
 			for(int i = 0; i < fileContent.size(); i++){
 				String toWrite = fileContent.get(i);
 				String indexNum = (i+1) + ". ";
@@ -263,6 +255,20 @@ public class textBuddy {
 			return EMPTY_STRING;
 		}
 	}
+	
+	private static String searchInList(String keyword){
+		int lineIndex = NOT_VALID_NUMBER;
+		String allLines = "";
+		for(int i = 0; i<fileContent.size(); i++){
+			String line = fileContent.get(i);
+			if(line.contains(keyword)){
+				lineIndex = i+1;
+				String lineFound = lineIndex + ". " + line;
+				allLines = allLines + lineFound + "\n";
+			}
+		}
+		return allLines;
+	}
 
 /*---------------------Testing functions----------------------*/
 	public static void initialiseTest(String fileN, ArrayList<String> data){
@@ -273,6 +279,5 @@ public class textBuddy {
 	public static void copyFromFileContent(){
 		testFileContent = fileContent;
 	}
-	
 	
 }
